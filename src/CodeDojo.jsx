@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-const GROK_API_KEY = import.meta.env.VITE_GROK_API_KEY;
-const GROK_API_URL = "https://api.x.ai/v1/chat/completions";
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+const GROQ_API_URL = "http://localhost:3000/api/groq";
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const LANGUAGES = {
@@ -402,11 +402,11 @@ async function fetchQuestions({ language, mode, difficulty, count }) {
     typed_fill: "User types a 1-4 word answer (type:'typed_fill'). Fields: question, answer(string, 1-4 words), explanation.",
   };
   const diffLabel = difficulty === "mixed" ? "a balanced mix of beginner, intermediate, and advanced" : difficulty;
-  const res = await fetch(GROK_API_URL, {
+  const res = await fetch(GROQ_API_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${GROK_API_KEY}` },
+    headers: { "Content-Type": "application/json", },
     body: JSON.stringify({
-      model: "grok-3-latest",
+      model: "llama-3.1-8b-instant",
       max_tokens: 4000,
       temperature: 0.96,
       messages: [
@@ -418,6 +418,7 @@ async function fetchQuestions({ language, mode, difficulty, count }) {
   if (!res.ok) throw new Error(`API Error ${res.status}: ${await res.text()}`);
   const data = await res.json();
   const text = (data.choices?.[0]?.message?.content || "").replace(/```json|```/g, "").trim();
+  console.log("API RESPONSE:", text);
   const match = text.match(/\[[\s\S]*\]/);
   if (!match) throw new Error("No JSON array found in response");
   return JSON.parse(match[0]);
@@ -544,7 +545,7 @@ function WelcomeScreen({ onStart }) {
       </button>
 
       <p style={{ marginTop:16, color:"var(--text-dim)", fontSize:11, fontWeight:500, letterSpacing:"0.04em" }}>
-        POWERED BY GROK AI
+        POWERED BY GROQ AI
       </p>
     </div>
   );
