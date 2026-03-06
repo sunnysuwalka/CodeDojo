@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
-const GROQ_API_URL = "http://localhost:3000/api/groq";
+const GROQ_API_URL = "/api/groq";
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const LANGUAGES = {
